@@ -45,6 +45,8 @@ None of this is custom. It's as per standard. That's how Google Chrome can talk 
 
 This might be tolerable if the port was declared as `http2`. But in this case, the port is clearly labelled as `http` and even then Istio breaks.
 
+This is purely on the **incoming** istio sidecar. Not on egress. That's what makes this bug even more annoying. For egress ports, there are LDS limits and so on. But on the incoming side, there is simply no ambiguity on the container port's name. But even if there **was** ambiguity, the spec already clearly addresses it and says to ignore the optional headers and do normal HTTP.
+
 ## TL;DR
 
 Any plain java HTTP call within cluster using standard, built-in HTTP clients and specs is broken on Istio. Forget about advanced stuff like Traffic routing and so on. Just point-to-point call will not work.
