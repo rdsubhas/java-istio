@@ -2,8 +2,8 @@
 
 This project demonstrates Istio is broken on Java 9 and beyond.
 
-* On Java 9 and 10 – it's broken with Spring boot (which is pretty much de-facto web framework on Java).
-* On Java 11 and above – it's broken regardless of framework.
+* On Java 9 and 10 – it's broken with any library that tries to do HTTP/2.
+* On Java 11 and above – it's broken at the language level for every HTTP request.
 
 ## WHAT??
 

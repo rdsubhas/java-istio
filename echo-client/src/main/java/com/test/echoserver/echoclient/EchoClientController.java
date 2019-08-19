@@ -21,14 +21,15 @@ public class EchoClientController {
 
         HttpRequest echoRequest = HttpRequest.newBuilder()
                 .uri(new URI(System.getenv("ECHO_SERVER_URL")))
-                .GET()
                 .header("Accept", "application/json")
+                .GET()
                 .build();
         HttpResponse<String> echoResponse = HttpClient.newHttpClient()
                 .send(echoRequest, HttpResponse.BodyHandlers.ofString());
 
         Map<String, Object> response = new HashMap<>();
         response.putAll(echoResponse.headers().map());
+        response.put("status", echoResponse.statusCode());
         response.put("body", echoResponse.body());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
