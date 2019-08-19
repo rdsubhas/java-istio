@@ -120,3 +120,4 @@ spec:
       nodePort: 30182
   selector:
     app: echo-client
+  type: NodePort

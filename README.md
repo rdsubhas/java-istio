@@ -2,6 +2,9 @@
 
 This project demonstrates Istio is broken on Java 9 and beyond.
 
+* On Java 9 and 10 – it's broken with Spring boot (which is pretty much de-facto web framework on Java).
+* On Java 11 and above – it's broken regardless of framework.
+
 ## WHAT??
 
 ### Given
@@ -10,6 +13,7 @@ This project demonstrates Istio is broken on Java 9 and beyond.
 * `echo-server` is a plain vanilla http echo server running on tomcat, created from https://start.spring.io
 * `echo-client` is a plain vanilla client that calls the echo server, using regular built-in Java HTTP client
 * They have ports declared as `http` as per [Istio requirements](https://istio.io/docs/setup/kubernetes/additional-setup/requirements/)
+* `echo-server` has istio sidecar injected. `echo-client` may or may not have istio injected, result is same.
 
 ### Steps to Reproduce
 
@@ -22,8 +26,7 @@ This project demonstrates Istio is broken on Java 9 and beyond.
 
 ## WHY??
 
-* Java 9 supports HTTP/2
-  * It conforms to HTTP/2 spec: https://httpwg.org/specs/rfc7540.html#discover-http used worldwide
+* HTTP/2 upgrade spec: https://httpwg.org/specs/rfc7540.html#discover-http
   * Generally, clients (web browsers, Java, etc) don't know beforehand whether the server they are calling supports HTTP/1 or HTTP/2
   * As outlined in the spec, they will send `Upgrade: h2c` and the other headers as an indicator
   * The server can respond by switching protocols, again as per spec
@@ -31,14 +34,19 @@ This project demonstrates Istio is broken on Java 9 and beyond.
   
     > A server that does not support HTTP/2 can respond to the request as though the Upgrade header field were absent.
 
-None of this is custom. It's as per standard. That's how Google Chrome can talk to your HTTP/1.1 servers today.
+None of this is custom. It's as per standard. That's how Google Chrome can talk to your HTTP/1.1 servers today. Spring boot supports this mode from Java 9 onwards. Java 11 and onwards it's the default behavior.
 
 * Istio needs ports to be prefixed with protocol: https://istio.io/docs/setup/kubernetes/additional-setup/requirements/
 * If it's a HTTP service, of course, we prefix as `http`
-* If it gets a HTTP/2 request, as per spec, **it should ignore the `Upgrade`**
+* If it gets a HTTP/2 request, as per spec, **it should ignore the `Upgrade`** as per the spec
 * But istio fails the request outright with `403 Forbidden`
-* This might be tolerable if the port was declared as `http2`. But in this case, the port is clearly labelled as `http` and even then Istio breaks.
 
-**TL;DR:** – Any plain java HTTP call within cluster using standard, built-in HTTP clients and specs is broken on Istio.
+This might be tolerable if the port was declared as `http2`. But in this case, the port is clearly labelled as `http` and even then Istio breaks.
 
-Forget about advanced stuff like Traffic routing and so on. Just point-to-point HTTP call does not work.
+## TL;DR
+
+Any plain java HTTP call within cluster using standard, built-in HTTP clients and specs is broken on Istio. Forget about advanced stuff like Traffic routing and so on. Just point-to-point call will not work.
+
+## HOW CAN I PREVENT THIS??
+
+Disable `http` mode in Istio and mark the port as `tcp`. Basically you lose all features of Istio.
