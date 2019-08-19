@@ -51,4 +51,5 @@ Any plain java HTTP call within cluster using standard, built-in HTTP clients an
 
 ## HOW CAN I PREVENT THIS??
 
-Disable `http` mode in Istio and mark the port as `tcp`. Basically you lose all features of Istio.
+1. Mark http ports as `tcp`
+2. (Or) Disable istio on the target namespace.
