@@ -1,0 +1,151 @@
+###
+### SERVER
+###
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: echo-server
+  labels:
+    istio-injection: enabled
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: echo-server
+  namespace: echo-server
+spec:
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: echo-server
+  template:
+    metadata:
+      labels:
+        app: echo-server
+    spec:
+      containers:
+        - name: echo-server
+          image: rdsubhas/java-istio:echo-server
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 1
+              memory: 512Mi
+            limits:
+              cpu: 1
+              memory: 512Mi
+          ports:
+            - containerPort: 8081
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo-server
+  namespace: echo-server
+spec:
+  ports:
+    - port: 8081
+      name: http
+  selector:
+    app: echo-server
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: echo-server
+  namespace: echo-server
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /echo-server/
+            backend:
+              serviceName: echo-server
+              servicePort: http
+---
+###
+### CLIENT
+###
+### NOTE: It doesn't matter whether client has istio injection enabled or not.
+### Just the server proxy breaks h2c.
+###
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: echo-client
+  labels:
+    istio-injection: disabled
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: echo-client
+  namespace: echo-client
+spec:
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: echo-client
+  template:
+    metadata:
+      labels:
+        app: echo-client
+    spec:
+      containers:
+        - name: echo-client
+          image: rdsubhas/java-istio:echo-client
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 1
+              memory: 512Mi
+            limits:
+              cpu: 1
+              memory: 512Mi
+          ports:
+            - containerPort: 8082
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+          env:
+            - name: ECHO_SERVER_URL
+              value: "http://echo-server.echo-server:8081/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: echo-client
+  namespace: echo-client
+spec:
+  ports:
+    - port: 8082
+      name: http
+  selector:
+    app: echo-client
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: echo-client
+  namespace: echo-client
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /echo-client/
+            backend:
+              serviceName: echo-client
+              servicePort: http

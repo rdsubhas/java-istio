@@ -15,7 +15,7 @@
 	<description>Istio demo client</description>
 
 	<properties>
-		<java.version>9</java.version>
+		<java.version>10</java.version>
 	</properties>
 
 	<dependencies>

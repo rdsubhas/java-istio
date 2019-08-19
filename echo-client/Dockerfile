@@ -1,4 +1,4 @@
-FROM openjdk:9-jdk
+FROM openjdk:10-jdk
 
 WORKDIR /app
 COPY . .
