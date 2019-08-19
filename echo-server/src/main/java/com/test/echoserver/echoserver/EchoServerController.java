@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-public class EchoController {
+public class EchoServerController {
 
     @RequestMapping(produces = "application/json", method = RequestMethod.GET, value = "/")
     public ResponseEntity<Object> index(

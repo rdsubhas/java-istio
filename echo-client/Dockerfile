@@ -4,4 +4,4 @@ WORKDIR /app
 COPY . .
 RUN ./mvnw -DskipTests package
 
-CMD ["java", "-jar", "target/echo-server-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/echo-client-0.0.1-SNAPSHOT.jar"]

@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.test.echoserver</groupId>
-	<artifactId>echo-server</artifactId>
+	<artifactId>echo-client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>echo-server</name>
-	<description>Echo server</description>
+	<name>echo-client</name>
+	<description>Istio demo client</description>
 
 	<properties>
 		<java.version>9</java.version>
