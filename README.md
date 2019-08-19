@@ -5,6 +5,10 @@ This project demonstrates Istio is broken on Java 9 and beyond.
 * On Java 9 and 10 – it's broken with any library that tries to do HTTP/2.
 * On Java 11 and above – it's broken at the language level for every HTTP request.
 
+Gophers be like...
+
+![](http://giphygifs.s3.amazonaws.com/media/kKdgdeuO2M08M/200.gif)
+
 ## WHAT??
 
 ### Given
