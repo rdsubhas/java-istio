@@ -52,24 +52,10 @@ spec:
   ports:
     - port: 8081
       name: http
+      nodePort: 30181
   selector:
     app: echo-server
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: echo-server
-  namespace: echo-server
-  annotations:
-    kubernetes.io/ingress.class: nginx
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /echo-server/
-            backend:
-              serviceName: echo-server
-              servicePort: http
+  type: NodePort
 ---
 ###
 ### CLIENT
@@ -131,21 +117,6 @@ spec:
   ports:
     - port: 8082
       name: http
+      nodePort: 30182
   selector:
     app: echo-client
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: echo-client
-  namespace: echo-client
-  annotations:
-    kubernetes.io/ingress.class: nginx
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /echo-client/
-            backend:
-              serviceName: echo-client
-              servicePort: http
