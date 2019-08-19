@@ -24,6 +24,8 @@ This project demonstrates Istio is broken on Java 9 and beyond.
 * **Expected:** Echo client talks to echo server
 * **Actual**: Istio blocks the request with `HTTP 403`
 
+![HTTP 403](/output.png?raw=true "HTTP 403")
+
 ## WHY??
 
 * HTTP/2 upgrade spec: https://httpwg.org/specs/rfc7540.html#discover-http
