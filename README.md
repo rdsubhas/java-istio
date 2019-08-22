@@ -5,8 +5,6 @@ This project demonstrates Istio is broken on Java 9 and beyond.
 * On Java 9 and 10 – it's broken with any library that tries to do HTTP/2.
 * On Java 11 and above – it's broken at the language level for every HTTP request.
 
-Gophers be like...
-
 ![](http://giphygifs.s3.amazonaws.com/media/kKdgdeuO2M08M/200.gif)
 
 ## WHAT??
@@ -21,7 +19,7 @@ Gophers be like...
 
 ### Steps to Reproduce
 
-* `kubectl apply -f k8s.yaml`
+* `kubectl apply -f "https://raw.githubusercontent.com/rdsubhas/java-istio/master/k8s.yaml"`
 * `kubectl get pods --all-namespaces`: Wait for `echo-server` and `echo-client` to be up and running
 * Open echo server at `http://<cluster>:30181/` – it works fine
 * Now open echo client at `http://<cluster>:30182/`
